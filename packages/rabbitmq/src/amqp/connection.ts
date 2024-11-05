@@ -143,13 +143,13 @@ export class AmqpConnection {
 
   private readonly outstandingMessageProcessing = new Set<Promise<void>>();
 
-  constructor(config: RabbitMQConfig) {
+  constructor(configArg?: RabbitMQConfig) {
     this.config = {
       deserializer: (message) => JSON.parse(message.toString()),
       serializer: (value) => Buffer.from(JSON.stringify(value)),
-      logger: config.logger ?? new Logger(AmqpConnection.name),
+      logger: configArg?.logger ?? new Logger(AmqpConnection.name),
       ...defaultConfig,
-      ...config,
+      ...configArg as RabbitMQConfig,
     };
 
     this.logger = this.config.logger;
